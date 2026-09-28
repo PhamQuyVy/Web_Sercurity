@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+<head><title th:text="${mode == 'create' ? 'Thêm sản phẩm' : 'Chỉnh sửa sản phẩm'}">Sản phẩm</title></head>
+<body>
+<main layout:fragment="content">
+    <div class="form-shell">
+        <aside class="form-aside product-aside"><span class="eyebrow">Quản lý sản phẩm</span><h1 th:text="${mode == 'create' ? 'Thêm sản phẩm mới' : 'Cập nhật sản phẩm'}">Sản phẩm</h1><p>Nhập thông tin sản phẩm vào biểu mẫu.</p></aside>
+        <section class="form-card modern-form">
+            <div class="form-title"><div><span>Thông tin sản phẩm</span><h2>Chi tiết đăng bán</h2></div><a th:href="@{/products}">Quay lại</a></div>
+            <form th:object="${productDTO}" method="post" enctype="multipart/form-data" th:action="${mode == 'create'} ? @{/products/create} : @{/products/edit/{id}(id=${productDTO.id})}">
+                <div th:if="${#fields.hasGlobalErrors()}" class="alert error"><p th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p></div>
+                <div class="form-grid">
+                    <div class="wide"><label>Tên sản phẩm</label><input th:field="*{name}" placeholder="Nhập tên sản phẩm"><small th:errors="*{name}"></small></div>
+                    <div class="wide"><label>Mô tả</label><textarea th:field="*{description}" rows="5" placeholder="Nhập mô tả sản phẩm"></textarea></div>
+                    <div><label>Giá bán</label><div class="price-input"><input type="number" min="0" step="0.01" th:field="*{price}" placeholder="0"><span>VNĐ</span></div><small th:errors="*{price}"></small></div>
+                    <div><label>Chủ sở hữu</label><select th:field="*{userId}"><option value="">Chọn người dùng</option><option th:each="u : ${userChoices}" th:value="${u.id}" th:text="${u.username} + ' · ' + ${u.fullName}"></option></select><small th:errors="*{userId}"></small></div>
+                    <div class="wide"><label>Ảnh sản phẩm</label><label class="upload-field"><input type="file" name="image" accept="image/*"><span><strong>Chọn ảnh từ thiết bị</strong><small>PNG, JPG hoặc WEBP; nên dùng ảnh tỉ lệ 1:1.</small></span></label><img th:if="${productDTO.imageUrl != null}" th:src="${#strings.substringBefore(productDTO.imageUrl,'|')}" class="preview" alt="Ảnh sản phẩm hiện tại"></div>
+                </div>
+                <div class="form-actions"><a class="button secondary" th:href="@{/products}">Hủy</a><button th:text="${mode == 'create' ? 'Đăng sản phẩm' : 'Lưu thay đổi'}">Lưu thay đổi</button></div>
+            </form>
+        </section>
+    </div>
+</main>
+</body>
+</html>

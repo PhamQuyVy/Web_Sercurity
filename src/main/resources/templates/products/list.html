@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+<head><title>Sản phẩm</title></head>
+<body>
+<main layout:fragment="content">
+    <div class="catalog-heading"><div><span class="eyebrow">Quản lý sản phẩm</span><h1>Tất cả sản phẩm</h1><p>Quản lý thông tin và hình ảnh sản phẩm.</p></div><a class="button" th:href="@{/products/create}">＋ Thêm sản phẩm</a></div>
+    <div th:if="${success}" class="alert success" th:text="${success}"></div><div th:if="${error}" class="alert error" th:text="${error}"></div>
+    <form class="catalog-search" th:action="@{/products}" method="get"><div><span>⌕</span><input name="keyword" th:value="${keyword}" placeholder="Tìm theo tên hoặc mô tả sản phẩm"></div><select name="size" aria-label="Số sản phẩm mỗi trang"><option value="8" th:selected="${size == 8}">8 sản phẩm</option><option value="12" th:selected="${size == 12}">12 sản phẩm</option><option value="24" th:selected="${size == 24}">24 sản phẩm</option></select><button>Tìm kiếm</button></form>
+    <div class="catalog-grid" th:if="${!products.empty}">
+        <article class="catalog-card" th:each="p : ${products.content}"><div class="catalog-media"><img th:if="${p.imageUrl != null}" th:src="${#strings.substringBefore(p.imageUrl,'|')}" th:alt="${p.name}"><div th:unless="${p.imageUrl != null}" class="image-placeholder"><span>UTEShop</span></div><span class="owner-pill" th:text="${p.username}">user</span></div><div class="catalog-info"><h2 th:text="${p.name}">Tên sản phẩm</h2><p th:text="${p.description != null and !#strings.isEmpty(p.description) ? p.description : 'Sản phẩm chất lượng tại UTEShop'}">Mô tả</p><strong th:text="${#numbers.formatDecimal(p.price,0,'COMMA',0,'POINT')} + ' đ'">0 đ</strong><div class="catalog-actions"><a class="button secondary" th:href="@{/products/edit/{id}(id=${p.id})}">Chỉnh sửa</a><form th:action="@{/products/delete/{id}(id=${p.id})}" method="post" onsubmit="return confirm('Xóa sản phẩm này?')"><button class="delete-button">Xóa</button></form></div></div></article>
+    </div>
+    <div class="empty-showcase" th:if="${products.empty}"><div>⌕</div><h3>Không tìm thấy sản phẩm</h3><p>Thử từ khóa khác hoặc thêm sản phẩm mới cho gian hàng.</p><a class="button" th:href="@{/products/create}">Thêm sản phẩm đầu tiên</a></div>
+    <nav class="pagination" th:if="${products.totalPages > 1}"><a th:if="${products.hasPrevious()}" th:href="@{/products(page=${products.number-1},size=${size},keyword=${keyword})}">‹</a><span th:text="${products.number+1} + ' / ' + ${products.totalPages}"></span><a th:if="${products.hasNext()}" th:href="@{/products(page=${products.number+1},size=${size},keyword=${keyword})}">›</a></nav>
+</main>
+</body>
+</html>

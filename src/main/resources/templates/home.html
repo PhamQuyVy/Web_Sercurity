@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+<head><title>Trang chủ</title></head>
+<body>
+<main layout:fragment="content" class="retail-home">
+    <div th:if="${success}" class="alert success" th:text="${success}"></div>
+
+    <section class="retail-hero">
+        <div class="retail-hero-copy"><span>UTEShop</span><h1>Thiết bị công nghệ<br>cho học tập và làm việc</h1><p>Quản lý sản phẩm nhanh chóng, bảo mật tài khoản với Spring Security.</p><div><a class="retail-cta" th:href="@{/products}">Xem sản phẩm</a><a class="retail-cta outline" th:href="@{/products/create}">Thêm sản phẩm</a></div></div>
+        <div class="retail-visual" aria-hidden="true"><div class="screen"><strong>UTEShop</strong><span>TECH STORE</span></div><div class="phone phone-one"></div><div class="phone phone-two"></div><div class="gift-box">+</div></div>
+    </section>
+
+    <section class="retail-showcase">
+        <aside class="service-panel">
+            <article><span>♧</span><div><strong>Cam kết chất lượng</strong><small>Sản phẩm được quản lý rõ ràng</small></div></article>
+            <article><span>◎</span><div><strong>Tìm kiếm nhanh</strong><small>Tìm theo tên và mô tả</small></div></article>
+            <article><span>♙</span><div><strong>Quản lý tài khoản</strong><small>Phân quyền User và Admin</small></div></article>
+            <article><span>⌁</span><div><strong>Bảo mật đăng nhập</strong><small>Xác nhận tài khoản bằng OTP</small></div></article>
+        </aside>
+
+        <div class="featured-frame">
+            <h2><span>Sản phẩm nổi bật</span></h2>
+            <div class="retail-product-row" th:if="${!promoProducts.empty}">
+                <article class="retail-product" th:each="p : ${promoProducts}">
+                    <span class="sale-label">MỚI</span>
+                    <a class="retail-product-image" th:href="@{/products/edit/{id}(id=${p.id})}"><img th:if="${p.imageUrl != null}" th:src="${#strings.substringBefore(p.imageUrl,'|')}" th:alt="${p.name}"><span th:unless="${p.imageUrl != null}">UTEShop</span></a>
+                    <h3 th:text="${p.name}">Tên sản phẩm</h3><strong th:text="${#numbers.formatDecimal(p.price,0,'COMMA',0,'POINT')} + ' đ'">0 đ</strong>
+                </article>
+            </div>
+            <div class="retail-empty" th:if="${promoProducts.empty}"><strong>Chưa có sản phẩm</strong><a th:href="@{/products/create}">Thêm sản phẩm đầu tiên</a></div>
+        </div>
+    </section>
+
+    <section class="retail-band">
+        <div class="retail-section-title"><h2>Sản phẩm mới</h2><span>◆ ◆ ◆</span></div>
+        <div class="retail-grid" th:if="${!latestProducts.empty}">
+            <article class="retail-product" th:each="p : ${latestProducts}">
+                <a class="retail-product-image" th:href="@{/products/edit/{id}(id=${p.id})}"><img th:if="${p.imageUrl != null}" th:src="${#strings.substringBefore(p.imageUrl,'|')}" th:alt="${p.name}"><span th:unless="${p.imageUrl != null}">UTEShop</span></a>
+                <h3 th:text="${p.name}">Tên sản phẩm</h3><strong th:text="${#numbers.formatDecimal(p.price,0,'COMMA',0,'POINT')} + ' đ'">0 đ</strong><small th:text="${p.username}">Người đăng</small>
+            </article>
+        </div>
+        <div class="retail-empty" th:if="${latestProducts.empty}"><strong>Chưa có thêm sản phẩm mới</strong></div>
+        <a class="view-all" th:href="@{/products}">Xem tất cả sản phẩm →</a>
+    </section>
+
+    <section class="retail-stats"><div><strong th:text="${productCount}">0</strong><span>Sản phẩm</span></div><div><strong th:text="${userCount}">0</strong><span>Người dùng</span></div><div><strong>2</strong><span>Vai trò hệ thống</span></div></section>
+</main>
+</body>
+</html>

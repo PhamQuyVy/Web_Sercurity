@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+<head><title th:text="${mode == 'create' ? 'Thêm người dùng' : 'Chỉnh sửa người dùng'}">Người dùng</title></head>
+<body>
+<main layout:fragment="content">
+    <div class="form-shell">
+        <aside class="form-aside"><span class="eyebrow">Quản trị tài khoản</span><h1 th:text="${mode == 'create' ? 'Tạo người dùng mới' : 'Cập nhật người dùng'}">Người dùng</h1><p th:text="${mode == 'create' ? 'Thêm thành viên và phân quyền truy cập phù hợp cho tài khoản.' : 'Điều chỉnh thông tin, trạng thái và quyền truy cập của tài khoản.'}"></p><div class="form-note"><strong>Thông tin an toàn</strong><span>Mật khẩu được mã hóa trước khi lưu. Ảnh đại diện cần là một URL công khai hợp lệ.</span></div></aside>
+        <section class="form-card modern-form">
+            <div class="form-title"><div><span>Thông tin tài khoản</span><h2>Chi tiết người dùng</h2></div><a th:href="@{/users}">Quay lại</a></div>
+            <form th:object="${userDTO}" method="post" th:action="${mode == 'create'} ? @{/users/create} : @{/users/edit/{id}(id=${userDTO.id})}">
+                <div th:if="${#fields.hasGlobalErrors()}" class="alert error"><p th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p></div>
+                <div class="form-grid">
+                    <div><label>Username</label><input th:field="*{username}" placeholder="Ví dụ: nguyenvana"><small th:errors="*{username}"></small></div>
+                    <div><label>Email</label><input type="email" th:field="*{email}" placeholder="name@example.com"><small th:errors="*{email}"></small></div>
+                    <div class="wide"><label>Họ và tên</label><input th:field="*{fullName}" placeholder="Nhập họ tên đầy đủ"><small th:errors="*{fullName}"></small></div>
+                    <div class="wide"><label>URL ảnh đại diện</label><input type="url" th:field="*{imageUrl}" placeholder="https://..."><small>Ảnh sẽ hiển thị tại khu vực tài khoản trên thanh điều hướng.</small></div>
+                    <div><label>Mật khẩu <span th:if="${mode == 'edit'}">(không đổi thì để trống)</span></label><input type="password" th:field="*{password}" placeholder="••••••••"></div>
+                    <div><label>Vai trò</label><select th:field="*{roleName}"><option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option></select></div>
+                </div>
+                <label class="toggle-row"><input type="checkbox" th:field="*{enabled}"><span><strong>Kích hoạt tài khoản</strong><small>Cho phép người dùng đăng nhập và sử dụng hệ thống.</small></span></label>
+                <div class="form-actions"><a class="button secondary" th:href="@{/users}">Hủy</a><button th:text="${mode == 'create' ? 'Tạo người dùng' : 'Lưu thay đổi'}">Lưu thay đổi</button></div>
+            </form>
+        </section>
+    </div>
+</main>
+</body>
+</html>

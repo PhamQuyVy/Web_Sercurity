@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+<head><title>Quản lý người dùng</title></head>
+<body>
+<main layout:fragment="content">
+    <section class="admin-heading">
+        <div><span class="eyebrow">Trung tâm quản trị</span><h1>Quản lý người dùng</h1><p>Theo dõi tài khoản, vai trò và trạng thái hoạt động trên hệ thống.</p></div>
+        <a class="button" th:href="@{/users/create}">＋ Thêm người dùng</a>
+    </section>
+    <div th:if="${success}" class="alert success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert error" th:text="${error}"></div>
+    <form class="admin-search" th:action="@{/users}" method="get"><div class="search-field"><span>⌕</span><input name="keyword" th:value="${keyword}" placeholder="Tìm theo tên, username hoặc email"></div><input type="hidden" name="size" th:value="${size}"><button>Tìm kiếm</button></form>
+    <div class="table-wrap user-table">
+        <table>
+            <thead><tr><th>Người dùng</th><th>Liên hệ</th><th>Vai trò</th><th>Trạng thái</th><th>Sản phẩm</th><th>Thao tác</th></tr></thead>
+            <tbody>
+            <tr th:each="u : ${users.content}">
+                <td><div class="user-cell"><span class="user-avatar" th:text="${#strings.substring(u.username, 0, 1).toUpperCase()}">U</span><div><strong th:text="${u.fullName}">Họ tên</strong><small th:text="'@' + ${u.username}">@username</small></div></div></td>
+                <td><span class="cell-main" th:text="${u.email}">email@example.com</span><small th:text="'ID #' + ${u.id}">ID</small></td>
+                <td><span class="role-badge" th:text="${u.roleName}">USER</span></td>
+                <td><span class="status-badge" th:classappend="${u.enabled} ? ' active' : ' inactive'" th:text="${u.enabled ? 'Đang hoạt động' : 'Đã khóa'}">Trạng thái</span></td>
+                <td><strong class="product-count" th:text="${u.productCount}">0</strong></td>
+                <td><div class="actions"><a class="table-action" th:href="@{/users/edit/{id}(id=${u.id})}">Chỉnh sửa</a><form th:action="@{/users/delete/{id}(id=${u.id})}" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa người dùng này?')"><button class="danger-link">Xóa</button></form></div></td>
+            </tr>
+            <tr th:if="${users.empty}"><td colspan="6"><div class="table-empty"><strong>Chưa có người dùng phù hợp</strong><span>Hãy thử từ khóa khác hoặc tạo một tài khoản mới.</span></div></td></tr>
+            </tbody>
+        </table>
+    </div>
+    <nav class="pagination" th:if="${users.totalPages > 1}"><a th:if="${users.hasPrevious()}" th:href="@{/users(page=${users.number-1},size=${size},keyword=${keyword})}">‹</a><span th:text="${users.number+1} + ' / ' + ${users.totalPages}"></span><a th:if="${users.hasNext()}" th:href="@{/users(page=${users.number+1},size=${size},keyword=${keyword})}">›</a></nav>
+</main>
+</body>
+</html>
